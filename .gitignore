@@ -1,22 +1,22 @@
-#Archivos de caché
+# Archivos de caché
 *.log
 
-#Ccarpeta de archivos temporales
+# Ccarpeta de archivos temporales
 temp/
 
-#Archivos de configuración específicos
+# Archivos de configuración específicos
 *config.ini
 
-#Cache
+# Cache
 *_psycache_
 
-#Configuracion de las variables de entorno
+# Configuracion de las variables de entorno
 *.env
 
-#Checkpoints del desarrollo del notebook 
+# Checkpoints del desarrollo del notebook 
 *.ipynb_checkpoints
 
-#Cache especifico de carpetas individuales
+# Cache especifico de carpetas individuales
 __pycache__/
 
 
