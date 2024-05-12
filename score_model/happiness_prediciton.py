@@ -4,6 +4,8 @@ import os
 from dotenv import load_dotenv
 from sklearn.metrics import mean_squared_error, r2_score
 
+
+
 load_dotenv()
 
 
@@ -32,4 +34,4 @@ except Exception as e:
 finally:
     if db_connection:
         db_connection.dispose()
-    print("Conexión a la base de datos cerrada.")
+    print("Conexión con la base de datos cerrada.")
