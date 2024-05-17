@@ -45,7 +45,7 @@
 
 ## ---Kafka Installation---
 
-## 4. Running the Kafka container with Airflow
+## 4. Running the Kafka container 
 
 ###  Make sure to have Docker installed and run this command with the docker-compose.yml file open in a terminal
 ```docker compose up```
