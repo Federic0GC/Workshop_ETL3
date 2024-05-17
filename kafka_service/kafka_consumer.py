@@ -8,14 +8,15 @@ import pymysql
 from dotenv import load_dotenv
 import joblib
 
-# Cargando modelo entrenado
+# Loading trained model
 joblib_file = "model/train_model_forest_regressor.pkl"
 loaded_model = joblib.load(joblib_file)
 print(loaded_model)
-# --- Logica consumer ---
+
+# --- Consumer logic ---
 consumer = KafkaConsumer(
-    'kafka_lab2',  # Tema al cual se va a conectar
-    bootstrap_servers=['localhost:9092'],  # Lista de servidor kafka al que se va a conectar
+    'kafka-workshop-happiness-model',  # Topic to connect to
+    bootstrap_servers=['localhost:9092'],  # List of Kafka servers to connect to
     auto_offset_reset='earliest',  
     enable_auto_commit=True,  
     group_id='my-group', 
@@ -37,36 +38,36 @@ csv_filename = "happiness_model_prediction.csv"
 
 try:
     for message in consumer:
-        print(f"Fila recibida: {message.value}")
+        print(f"Received row: {message.value}")
 
         try:
             decoded_message = message.value.decode('utf-8')
             message_data = json.loads(decoded_message)
             
-           
+            # Convert message data to DataFrame
             df = pd.DataFrame([message_data])
 
-            
+            # Define the features to use for prediction
             features = ['economy (gdp per capita)', 'family', 'health (life expectancy)', 'freedom', 'trust (government corruption)']
             df['happiness_prediction'] = loaded_model.predict(df[features])
 
-            
+            # Save the data to the MySQL database
             df.to_sql('happiness_prediction_table', con=db_connection, if_exists='append', index=False)
-            print("Datos guardados correctamente en la base de datos MySQL.")
+            print("Data successfully saved to the MySQL database.")
 
-           
+            # Save the data to a CSV file
             df.to_csv(csv_filename, mode='a', header=not os.path.exists(csv_filename), index=False)
-            print("Datos guardados correctamente en el archivo CSV.")
+            print("Data successfully saved to the CSV file.")
 
         except Exception as e:
-            print(f"Error al procesar o guardar el mensaje: {e}")
+            print(f"Error processing or saving the message: {e}")
 
 except Exception as e:
-    print(f"Error al consumir mensajes de Kafka: {e}")
+    print(f"Error consuming messages from Kafka: {e}")
 
 finally:
     consumer.close()
 
     if db_connection:
         db_connection.dispose()
-    print("Conexión a la base de datos cerrada.")
+    print("Database connection closed.")
